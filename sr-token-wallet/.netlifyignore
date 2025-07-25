@@ -1,0 +1,12 @@
+# Ignore SSR-related files
+**/server.ts
+**/main.server.ts
+**/app.config.server.ts
+**/dist/sr-token-wallet/server/
+**/.netlify/edge-functions/
+
+# Ignore development files
+**/node_modules/
+**/.git/
+**/.vscode/
+**/*.log 
