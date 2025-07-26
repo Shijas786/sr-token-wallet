@@ -48,10 +48,10 @@ export class Web3Service {
   ];
 
   constructor() {
-    this.initializeProvider();
+    // Do not call initializeProvider here
   }
 
-  private initializeProvider(): void {
+  public initializeProvider(): void {
     if (typeof window !== 'undefined' && (window as any).ethereum) {
       this.provider = new ethers.BrowserProvider((window as any).ethereum);
       this.setupEventListeners();

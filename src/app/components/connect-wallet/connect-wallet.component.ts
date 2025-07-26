@@ -31,6 +31,7 @@ export class ConnectWalletComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.web3Service.initializeProvider();
     this.isMetaMaskInstalled = this.web3Service.isMetaMaskInstalled();
     
     // Check if already connected
