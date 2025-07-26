@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { BehaviorSubject, Observable } from 'rxjs';
+import Web3Modal from 'web3modal';
 
 export interface WalletState {
   isConnected: boolean;
@@ -29,6 +30,7 @@ export class Web3Service {
     balance: '0',
     networkId: null
   });
+  private web3Modal: Web3Modal;
 
   // SR Token Contract Address (placeholder - replace with actual deployed contract)
   private readonly TOKEN_CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890';
@@ -48,57 +50,29 @@ export class Web3Service {
   ];
 
   constructor() {
-    // Do not call initializeProvider here
+    this.web3Modal = new Web3Modal({
+      // You can add more config here if needed
+      // See https://docs.web3modal.com/
+    });
   }
 
-  public initializeProvider(): void {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
-      this.provider = new ethers.BrowserProvider((window as any).ethereum);
-      this.setupEventListeners();
-    }
-  }
-
-  private setupEventListeners(): void {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
-      (window as any).ethereum.on('accountsChanged', (accounts: string[]) => {
-        if (accounts.length === 0) {
-          this.disconnectWallet();
-        } else {
-          this.getTokenBalance();
-        }
-      });
-
-      (window as any).ethereum.on('chainChanged', () => {
-        window.location.reload();
-      });
-    }
-  }
+  // initializeProvider is no longer needed with web3modal
 
   async connectWallet(): Promise<boolean> {
     try {
-      if (!this.provider) {
-        throw new Error('MetaMask not detected. Please install MetaMask.');
-      }
-
-      // Request account access
-      await this.provider.send('eth_requestAccounts', []);
-      
+      // Open web3modal and get a provider
+      const instance = await this.web3Modal.connect();
+      this.provider = new ethers.BrowserProvider(instance);
       this.signer = await this.provider.getSigner();
       const address = await this.signer.getAddress();
-      
-      // Get network information
       const network = await this.provider.getNetwork();
-      
       this.walletState.next({
         isConnected: true,
         address: address,
-        balance: '0', // Will be updated by getTokenBalance
+        balance: '0',
         networkId: Number(network.chainId)
       });
-
-      // Get initial token balance
       await this.getTokenBalance();
-      
       return true;
     } catch (error) {
       console.error('Error connecting wallet:', error);
@@ -237,7 +211,8 @@ export class Web3Service {
   }
 
   isMetaMaskInstalled(): boolean {
-    return typeof window !== 'undefined' && !!(window as any).ethereum;
+    // Deprecated: always return true for web3modal
+    return true;
   }
 
   async switchNetwork(chainId: string): Promise<void> {

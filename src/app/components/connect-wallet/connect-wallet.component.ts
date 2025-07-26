@@ -31,9 +31,6 @@ export class ConnectWalletComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.web3Service.initializeProvider();
-    this.isMetaMaskInstalled = this.web3Service.isMetaMaskInstalled();
-    
     // Check if already connected
     const walletState = this.web3Service.getCurrentWalletState();
     if (walletState.isConnected) {
@@ -42,11 +39,6 @@ export class ConnectWalletComponent implements OnInit {
   }
 
   async connectWallet(): Promise<void> {
-    if (!this.isMetaMaskInstalled) {
-      this.showMessage('Please install MetaMask to use this dApp', 'error');
-      return;
-    }
-
     this.isConnecting = true;
     
     try {
