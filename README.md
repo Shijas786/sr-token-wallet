@@ -1,31 +1,33 @@
 # SR Token Wallet
 
-A modern, Layer3-inspired Ethereum wallet application for managing SR tokens with a beautiful, responsive interface.
+A modern, Layer3-inspired Ethereum wallet application for managing SR tokens with multi-wallet support and a beautiful, responsive interface.
 
 ## 🚀 Features
 
-- **🔐 Secure Wallet Integration**: MetaMask integration with bank-grade security
+- **🔐 Multi-Wallet Support**: Auto-detection and support for MetaMask, Rabby, Coinbase Wallet, and more
 - **💎 SR Token Management**: Send and receive SR tokens on Ethereum network
 - **📱 Responsive Design**: Beautiful Layer3-inspired UI that works on all devices
 - **🔍 QR Code Support**: Generate QR codes for easy address sharing
 - **⚡ Real-time Updates**: Live balance and transaction status updates
 - **🌐 Multi-Network Support**: Ethereum Mainnet, Sepolia, and Goerli testnets
 - **📊 Transaction History**: Track your recent transactions with Etherscan links
+- **🔄 Auto-Detection**: Automatically detects available wallet extensions
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: Angular 17 with TypeScript
 - **UI Framework**: Angular Material with custom Layer3-inspired theme
-- **Web3 Integration**: MetaMask wallet integration
+- **Web3 Integration**: Ethers.js with multi-wallet support
 - **QR Code**: qrcode.js library for QR code generation
 - **Styling**: SCSS with custom design system
 - **Build Tool**: Angular CLI
+- **Deployment**: Vercel
 
 ## 📋 Prerequisites
 
 - Node.js (v18 or higher)
 - npm or yarn
-- MetaMask browser extension
+- Any supported wallet extension (MetaMask, Rabby, Coinbase Wallet)
 - Modern web browser
 
 ## 🚀 Installation
@@ -53,10 +55,18 @@ A modern, Layer3-inspired Ethereum wallet application for managing SR tokens wit
 
 ### Connecting Your Wallet
 
-1. **Install MetaMask**: Download and install the MetaMask browser extension
-2. **Connect Wallet**: Click "Connect MetaMask" on the home page
-3. **Authorize**: Approve the connection in MetaMask popup
-4. **View Dashboard**: Your wallet information and balance will be displayed
+1. **Install a Supported Wallet**: Download and install any supported wallet extension (MetaMask, Rabby, Coinbase Wallet)
+2. **Connect Wallet**: The app will automatically detect available wallets and show them as options
+3. **Select Wallet**: Click on your preferred wallet from the available options
+4. **Authorize**: Approve the connection in your wallet popup
+5. **View Dashboard**: Your wallet information and balance will be displayed
+
+### Supported Wallets
+
+- **MetaMask** 🦊 - Most popular Ethereum wallet
+- **Rabby** 🦊 - Advanced DeFi wallet with enhanced security
+- **Coinbase Wallet** 🪙 - User-friendly wallet from Coinbase
+- **WalletConnect** 🔗 - Mobile wallet connection (coming soon)
 
 ### Sending SR Tokens
 
@@ -65,7 +75,7 @@ A modern, Layer3-inspired Ethereum wallet application for managing SR tokens wit
    - Recipient address (0x...)
    - Amount to send
 3. **Review**: Check the transaction details and fees
-4. **Confirm**: Click "Send Tokens" and approve in MetaMask
+4. **Confirm**: Click "Send Tokens" and approve in your wallet
 5. **Track**: Monitor transaction status and view on Etherscan
 
 ### Receiving SR Tokens
@@ -125,10 +135,23 @@ src/
 - `npm run test` - Run unit tests
 - `npm run lint` - Run linting
 
+## 🌐 Live Deployment
+
+Your SR Token Wallet is deployed and live at:
+```
+https://sr-token-wallet-r8iwglbl4-shijas-projects-45273324.vercel.app
+```
+
+### Deployment Features
+- **Automatic Deployments**: Every push to GitHub triggers a new deployment
+- **Global CDN**: Fast loading worldwide via Vercel's edge network
+- **HTTPS**: Secure by default
+- **Custom Domain**: Can be configured in Vercel dashboard
+
 ## 🔒 Security
 
-- **MetaMask Integration**: Uses MetaMask's secure wallet connection
-- **No Private Key Storage**: Private keys never leave MetaMask
+- **Multi-Wallet Support**: Uses secure wallet connections for various providers
+- **No Private Key Storage**: Private keys never leave your wallet
 - **HTTPS Only**: Secure communication protocols
 - **Input Validation**: Comprehensive form validation
 - **Error Handling**: Graceful error handling and user feedback
@@ -156,7 +179,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Layer3**: Design inspiration from Layer3's beautiful interface
 - **Angular Team**: For the amazing framework
-- **MetaMask**: For secure wallet integration
+- **Ethers.js**: For Web3 integration
+- **Vercel**: For seamless deployment
 - **Ethereum Community**: For the blockchain infrastructure
 
 ## 📞 Support
@@ -165,42 +189,28 @@ If you encounter any issues or have questions:
 
 1. Check the [Issues](https://github.com/yourusername/sr-token-wallet/issues) page
 2. Create a new issue with detailed information
-3. Include browser version, MetaMask version, and error messages
+3. Include browser version, wallet extension version, and error messages
 
 ## 🔄 Version History
 
-- **v1.0.0**: Initial release with core wallet functionality
+- **v1.0.0**: Initial release with MetaMask integration
 - **v1.1.0**: Added QR code support and improved UI
 - **v1.2.0**: Enhanced security and performance optimizations
+- **v1.3.0**: Added multi-wallet support (MetaMask, Rabby, Coinbase Wallet)
+
+## 🔧 Configuration
+
+### Token Contract Address
+
+The token contract address is currently set to a placeholder. To use with your specific SR token:
+
+1. **Update the contract address** in `src/app/services/web3.service.ts`:
+   ```typescript
+   private readonly TOKEN_CONTRACT_ADDRESS = 'YOUR_CONTRACT_ADDRESS_HERE';
+   ```
+
+2. **Or use environment variables** for production deployments
 
 ---
 
 **Built with ❤️ for the Ethereum community**
-
-## 📦 **Your Vercel Live Link**
-
-Your SR Token Wallet will be available at a URL like:
-```
-https://sr-token-wallet-[random-string].vercel.app
-```
-
-## 📱 **What You Can Do Now**
-
-1. **Wait for deployment** - It usually takes 1-2 minutes
-2. **Check the terminal** - The live URL will appear when deployment completes
-3. **Visit Vercel Dashboard** - Go to [vercel.com/dashboard](https://vercel.com/dashboard) to see your project
-
-## 🎯 **Next Steps**
-
-Once you have your live link:
-
-1. **Test your wallet** - Connect MetaMask and test the functionality
-2. **Share the link** - Share with others to test your SR Token Wallet
-3. **Custom domain** (optional) - Add your own domain in Vercel settings
-4. **Monitor performance** - Check Vercel analytics for usage stats
-
-## 📦 **Automatic Deployments**
-
-Now that your project is linked to Vercel, every time you push changes to your GitHub repository, Vercel will automatically deploy the updates to your live link!
-
-Your SR Token Wallet will be live and accessible to anyone with the URL. The deployment should complete shortly and you'll see the live link in your terminal or Vercel dashboard.
