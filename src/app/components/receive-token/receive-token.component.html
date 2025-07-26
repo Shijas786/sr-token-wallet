@@ -1,0 +1,230 @@
+<div class="receive-token-container">
+  <!-- Header -->
+  <header class="receive-header">
+    <div class="header-content">
+      <button class="back-button" (click)="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="19" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="12,19 5,12 12,5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Dashboard
+      </button>
+      
+      <div class="header-title">
+        <h1 class="layer3-heading">Receive SR Tokens</h1>
+        <p class="layer3-body">Share your address to receive tokens</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="receive-content layer3-fade-in">
+    <!-- Address Card -->
+    <div class="address-section">
+      <div class="layer3-card address-card">
+        <div class="card-header">
+          <h2 class="layer3-subheading">Your Wallet Address</h2>
+          <p class="layer3-body">Share this address to receive SR tokens</p>
+        </div>
+
+        <div class="address-display">
+          <div class="address-container">
+            <div class="address-text">
+              <span class="address-label">Address</span>
+              <span class="address-value">{{ walletState.address }}</span>
+            </div>
+            
+            <div class="address-actions">
+              <button 
+                class="action-button copy-button"
+                (click)="copyAddress()" 
+                matTooltip="Copy Address">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M5 15H4A2 2 0 0 1 2 13V4A2 2 0 0 1 4 2H13A2 2 0 0 1 15 4V5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Copy
+              </button>
+              
+              <button 
+                class="action-button share-button"
+                (click)="shareAddress()" 
+                matTooltip="Share Address">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="2"/>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section">
+      <div class="layer3-card qr-card">
+        <div class="card-header">
+          <h3 class="layer3-subheading">QR Code</h3>
+          <p class="layer3-body">Scan to get the address</p>
+        </div>
+
+        <div class="qr-content">
+          <div *ngIf="!walletState.address" class="qr-placeholder">
+            <div class="qr-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 3H18C19.1046 3 20 3.89543 20 5V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 21H6C4.89543 21 4 20.1046 4 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 8V6C21 4.89543 20.1046 4 19 4H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 16V18C3 19.1046 3.89543 20 5 20H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p>Connect your wallet to generate QR code</p>
+            <span>QR code will appear once wallet is connected</span>
+          </div>
+          
+          <div *ngIf="walletState.address" class="qr-display">
+            <canvas #qrCanvas width="200" height="200"></canvas>
+            <p class="qr-note">Scan this QR code to get the wallet address</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Info -->
+    <div class="network-section">
+      <div class="layer3-card network-card">
+        <div class="card-header">
+          <h3 class="layer3-subheading">Network Information</h3>
+        </div>
+
+        <div class="network-info">
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 12H22" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2A15.3 15.3 0 0 1 22 12A15.3 15.3 0 0 1 12 22A15.3 15.3 0 0 1 2 12A15.3 15.3 0 0 1 12 2Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Network</span>
+              <span class="info-value">{{ getNetworkName() }}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16V8A2 2 0 0 0 19 6H5A2 2 0 0 0 3 8V16A2 2 0 0 0 5 18H19A2 2 0 0 0 21 16Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 14H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M7 10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Token Standard</span>
+              <span class="info-value">ERC-20</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 1V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 21V23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4.22 4.22L5.64 5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.36 18.36L19.78 19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M1 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 12H23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4.22 19.78L5.64 18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Decimals</span>
+              <span class="info-value">18</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 11.08V12A10 10 0 1 1 5.68 3.49" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Status</span>
+              <span class="info-value connected">Connected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions-section">
+      <div class="layer3-card instructions-card">
+        <div class="card-header">
+          <h3 class="layer3-subheading">How to Receive</h3>
+        </div>
+
+        <div class="instructions-content">
+          <div class="instruction-item">
+            <div class="instruction-number">1</div>
+            <div class="instruction-content">
+              <h4>Share Your Address</h4>
+              <p>Copy and share your wallet address with the sender</p>
+            </div>
+          </div>
+
+          <div class="instruction-item">
+            <div class="instruction-number">2</div>
+            <div class="instruction-content">
+              <h4>Wait for Transaction</h4>
+              <p>The sender will initiate the transfer on the blockchain</p>
+            </div>
+          </div>
+
+          <div class="instruction-item">
+            <div class="instruction-number">3</div>
+            <div class="instruction-content">
+              <h4>Check Your Balance</h4>
+              <p>Your SR token balance will update automatically</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etherscan Link -->
+    <div class="etherscan-section">
+      <div class="layer3-card etherscan-card">
+        <div class="card-header">
+          <h3 class="layer3-subheading">View on Etherscan</h3>
+        </div>
+
+        <div class="etherscan-content">
+          <p class="layer3-body">Track your wallet activity and transactions</p>
+          <a 
+            [href]="getEtherscanUrl(walletState.address || '')" 
+            target="_blank"
+            class="layer3-button etherscan-button">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 13V19A2 2 0 0 1 16 21H8A2 2 0 0 1 6 19V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="15,10 12,13 9,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="13" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            View on Etherscan
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
