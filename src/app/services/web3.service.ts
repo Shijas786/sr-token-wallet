@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { BehaviorSubject, Observable } from 'rxjs';
-import Web3Modal from 'web3modal';
 
 export interface WalletState {
   isConnected: boolean;
@@ -18,6 +17,14 @@ export interface TokenInfo {
   balance: string;
 }
 
+export interface WalletProvider {
+  name: string;
+  id: string;
+  icon: string;
+  isAvailable: boolean;
+  connect: () => Promise<ethers.BrowserProvider>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,7 +37,6 @@ export class Web3Service {
     balance: '0',
     networkId: null
   });
-  private web3Modal: Web3Modal;
 
   // SR Token Contract Address (placeholder - replace with actual deployed contract)
   private readonly TOKEN_CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890';
@@ -49,29 +55,103 @@ export class Web3Service {
     'event Approval(address indexed owner, address indexed spender, uint256 value)'
   ];
 
+  private walletProviders: WalletProvider[] = [
+    {
+      name: 'MetaMask',
+      id: 'metamask',
+      icon: '🦊',
+      isAvailable: false,
+      connect: async () => {
+        if (typeof window !== 'undefined' && (window as any).ethereum) {
+          return new ethers.BrowserProvider((window as any).ethereum);
+        }
+        throw new Error('MetaMask not available');
+      }
+    },
+    {
+      name: 'Rabby',
+      id: 'rabby',
+      icon: '🦊',
+      isAvailable: false,
+      connect: async () => {
+        if (typeof window !== 'undefined' && (window as any).rabby) {
+          return new ethers.BrowserProvider((window as any).rabby);
+        }
+        throw new Error('Rabby not available');
+      }
+    },
+    {
+      name: 'Coinbase Wallet',
+      id: 'coinbase',
+      icon: '🪙',
+      isAvailable: false,
+      connect: async () => {
+        if (typeof window !== 'undefined' && (window as any).coinbaseWalletExtension) {
+          return new ethers.BrowserProvider((window as any).coinbaseWalletExtension);
+        }
+        throw new Error('Coinbase Wallet not available');
+      }
+    },
+    {
+      name: 'WalletConnect',
+      id: 'walletconnect',
+      icon: '🔗',
+      isAvailable: false,
+      connect: async () => {
+        // This would require WalletConnect setup
+        throw new Error('WalletConnect not implemented yet');
+      }
+    }
+  ];
+
   constructor() {
-    this.web3Modal = new Web3Modal({
-      // You can add more config here if needed
-      // See https://docs.web3modal.com/
+    this.detectAvailableWallets();
+  }
+
+  private detectAvailableWallets(): void {
+    if (typeof window === 'undefined') return;
+
+    this.walletProviders.forEach(provider => {
+      switch (provider.id) {
+        case 'metamask':
+          provider.isAvailable = !!(window as any).ethereum && !(window as any).ethereum.isRabby;
+          break;
+        case 'rabby':
+          provider.isAvailable = !!(window as any).rabby || ((window as any).ethereum && (window as any).ethereum.isRabby);
+          break;
+        case 'coinbase':
+          provider.isAvailable = !!(window as any).coinbaseWalletExtension;
+          break;
+        case 'walletconnect':
+          provider.isAvailable = true; // Always available as fallback
+          break;
+      }
     });
   }
 
-  // initializeProvider is no longer needed with web3modal
+  getAvailableWallets(): WalletProvider[] {
+    return this.walletProviders.filter(wallet => wallet.isAvailable);
+  }
 
-  async connectWallet(): Promise<boolean> {
+  async connectWallet(walletId: string): Promise<boolean> {
     try {
-      // Open web3modal and get a provider
-      const instance = await this.web3Modal.connect();
-      this.provider = new ethers.BrowserProvider(instance);
+      const wallet = this.walletProviders.find(w => w.id === walletId);
+      if (!wallet || !wallet.isAvailable) {
+        throw new Error(`${wallet?.name || 'Wallet'} not available`);
+      }
+
+      this.provider = await wallet.connect();
       this.signer = await this.provider.getSigner();
       const address = await this.signer.getAddress();
       const network = await this.provider.getNetwork();
+      
       this.walletState.next({
         isConnected: true,
         address: address,
         balance: '0',
         networkId: Number(network.chainId)
       });
+
       await this.getTokenBalance();
       return true;
     } catch (error) {
@@ -82,6 +162,7 @@ export class Web3Service {
 
   async disconnectWallet(): Promise<void> {
     this.signer = null;
+    this.provider = null;
     this.walletState.next({
       isConnected: false,
       address: null,
@@ -211,8 +292,7 @@ export class Web3Service {
   }
 
   isMetaMaskInstalled(): boolean {
-    // Deprecated: always return true for web3modal
-    return true;
+    return typeof window !== 'undefined' && !!(window as any).ethereum;
   }
 
   async switchNetwork(chainId: string): Promise<void> {

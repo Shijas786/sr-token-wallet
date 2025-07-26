@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Web3Service } from '../../services/web3.service';
+import { Web3Service, WalletProvider } from '../../services/web3.service';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -22,7 +22,7 @@ import { Web3Service } from '../../services/web3.service';
 })
 export class ConnectWalletComponent implements OnInit {
   isConnecting = false;
-  isMetaMaskInstalled = false;
+  availableWallets: WalletProvider[] = [];
 
   constructor(
     private web3Service: Web3Service,
@@ -36,13 +36,16 @@ export class ConnectWalletComponent implements OnInit {
     if (walletState.isConnected) {
       this.router.navigate(['/dashboard']);
     }
+    
+    // Get available wallets
+    this.availableWallets = this.web3Service.getAvailableWallets();
   }
 
-  async connectWallet(): Promise<void> {
+  async connectWallet(walletId: string): Promise<void> {
     this.isConnecting = true;
     
     try {
-      await this.web3Service.connectWallet();
+      await this.web3Service.connectWallet(walletId);
       this.showMessage('Wallet connected successfully!', 'success');
       this.router.navigate(['/dashboard']);
     } catch (error: any) {
