@@ -145,12 +145,30 @@ export class Web3Service {
       const address = await this.signer.getAddress();
       const network = await this.provider.getNetwork();
       
-      this.walletState.next({
-        isConnected: true,
-        address: address,
-        balance: '0',
-        networkId: Number(network.chainId)
-      });
+      // Always switch to Base network
+      if (Number(network.chainId) !== 8453 && Number(network.chainId) !== 84532) {
+        try {
+          await this.switchToBaseNetwork();
+          // Get updated network info after switching
+          const updatedNetwork = await this.provider.getNetwork();
+          this.walletState.next({
+            isConnected: true,
+            address: address,
+            balance: '0',
+            networkId: Number(updatedNetwork.chainId)
+          });
+        } catch (switchError) {
+          console.error('Failed to switch to Base network:', switchError);
+          throw new Error('Please switch to Base network to use this wallet');
+        }
+      } else {
+        this.walletState.next({
+          isConnected: true,
+          address: address,
+          balance: '0',
+          networkId: Number(network.chainId)
+        });
+      }
 
       await this.getTokenBalance();
       return true;
@@ -311,6 +329,89 @@ export class Web3Service {
     }
   }
 
+  async switchToBaseNetwork(): Promise<void> {
+    try {
+      if (!this.provider) {
+        throw new Error('Provider not initialized');
+      }
+
+      const baseMainnetChainId = '0x2105'; // 8453 in hex
+      const baseTestnetChainId = '0x14a34'; // 84532 in hex
+
+      try {
+        // Try to switch to Base mainnet first
+        await (window as any).ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: baseMainnetChainId }]
+        });
+      } catch (switchError: any) {
+        // If the network is not added, add it
+        if (switchError.code === 4902) {
+          await (window as any).ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: baseMainnetChainId,
+              chainName: 'Base',
+              nativeCurrency: {
+                name: 'Ether',
+                symbol: 'ETH',
+                decimals: 18
+              },
+              rpcUrls: ['https://mainnet.base.org'],
+              blockExplorerUrls: ['https://basescan.org']
+            }]
+          });
+        } else {
+          throw switchError;
+        }
+      }
+    } catch (error) {
+      console.error('Error switching to Base network:', error);
+      throw error;
+    }
+  }
+
+  async switchToBaseTestnet(): Promise<void> {
+    try {
+      if (!this.provider) {
+        throw new Error('Provider not initialized');
+      }
+
+      const baseTestnetChainId = '0x14a34'; // 84532 in hex
+
+      try {
+        // Try to switch to Base testnet
+        await (window as any).ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: baseTestnetChainId }]
+        });
+      } catch (switchError: any) {
+        // If the network is not added, add it
+        if (switchError.code === 4902) {
+          await (window as any).ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: baseTestnetChainId,
+              chainName: 'Base Sepolia',
+              nativeCurrency: {
+                name: 'Ether',
+                symbol: 'ETH',
+                decimals: 18
+              },
+              rpcUrls: ['https://sepolia.base.org'],
+              blockExplorerUrls: ['https://sepolia.basescan.org']
+            }]
+          });
+        } else {
+          throw switchError;
+        }
+      }
+    } catch (error) {
+      console.error('Error switching to Base testnet:', error);
+      throw error;
+    }
+  }
+
   formatAddress(address: string): string {
     if (!address) return '';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -318,13 +419,36 @@ export class Web3Service {
 
   getEtherscanUrl(txHash: string): string {
     const networkId = this.walletState.value.networkId;
-    if (networkId === 1) {
-      return `https://etherscan.io/tx/${txHash}`;
-    } else if (networkId === 11155111) {
+    if (networkId === 11155111) {
       return `https://sepolia.etherscan.io/tx/${txHash}`;
     } else if (networkId === 5) {
       return `https://goerli.etherscan.io/tx/${txHash}`;
+    } else if (networkId === 8453) {
+      return `https://basescan.org/tx/${txHash}`;
+    } else if (networkId === 84532) {
+      return `https://sepolia.basescan.org/tx/${txHash}`;
     }
-    return `https://etherscan.io/tx/${txHash}`;
+    return `https://basescan.org/tx/${txHash}`;
+  }
+
+  getCurrentNetworkName(): string {
+    const networkId = this.walletState.value.networkId;
+    switch (networkId) {
+      case 11155111:
+        return 'Sepolia Testnet';
+      case 5:
+        return 'Goerli Testnet';
+      case 8453:
+        return 'Base Mainnet';
+      case 84532:
+        return 'Base Sepolia Testnet';
+      default:
+        return `Network ${networkId}`;
+    }
+  }
+
+  isOnBaseNetwork(): boolean {
+    const networkId = this.walletState.value.networkId;
+    return networkId === 8453 || networkId === 84532;
   }
 } 

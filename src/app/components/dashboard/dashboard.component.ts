@@ -133,12 +133,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getNetworkName(): string {
     const networkId = this.walletState.networkId;
     switch (networkId) {
-      case 1:
-        return 'Ethereum Mainnet';
       case 11155111:
         return 'Sepolia Testnet';
       case 5:
         return 'Goerli Testnet';
+      case 8453:
+        return 'Base Mainnet';
+      case 84532:
+        return 'Base Sepolia Testnet';
       default:
         return `Network ${networkId}`;
     }
@@ -147,14 +149,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getNetworkColor(): string {
     const networkId = this.walletState.networkId;
     switch (networkId) {
-      case 1:
-        return '#4CAF50';
       case 11155111:
       case 5:
         return '#FF9800';
+      case 8453:
+        return '#0052FF';
+      case 84532:
+        return '#0052FF';
       default:
         return '#9E9E9E';
     }
+  }
+
+  async switchToBaseNetwork(): Promise<void> {
+    try {
+      await this.web3Service.switchToBaseNetwork();
+      this.showMessage('Switched to Base network', 'success');
+    } catch (error) {
+      console.error('Error switching to Base network:', error);
+      this.showMessage('Failed to switch to Base network', 'error');
+    }
+  }
+
+  isOnBaseNetwork(): boolean {
+    return this.web3Service.isOnBaseNetwork();
   }
 
   private showMessage(message: string, type: 'success' | 'error'): void {

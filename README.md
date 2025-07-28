@@ -1,15 +1,15 @@
 # SR Token Wallet
 
-A modern, Layer3-inspired Ethereum wallet application for managing SR tokens with multi-wallet support and a beautiful, responsive interface.
+A modern, Layer3-inspired Base network wallet application for managing SR tokens with multi-wallet support and a beautiful, responsive interface.
 
 ## 🚀 Features
 
 - **🔐 Multi-Wallet Support**: Auto-detection and support for MetaMask, Rabby, Coinbase Wallet, and more
-- **💎 SR Token Management**: Send and receive SR tokens on Ethereum network
+- **💎 SR Token Management**: Send and receive SR tokens on Base network
 - **📱 Responsive Design**: Beautiful Layer3-inspired UI that works on all devices
 - **🔍 QR Code Support**: Generate QR codes for easy address sharing
 - **⚡ Real-time Updates**: Live balance and transaction status updates
-- **🌐 Multi-Network Support**: Ethereum Mainnet, Sepolia, and Goerli testnets
+- **🌐 Multi-Network Support**: Base Mainnet and Base Sepolia testnet
 - **📊 Transaction History**: Track your recent transactions with Etherscan links
 - **🔄 Auto-Detection**: Automatically detects available wallet extensions
 
@@ -63,7 +63,7 @@ A modern, Layer3-inspired Ethereum wallet application for managing SR tokens wit
 
 ### Supported Wallets
 
-- **MetaMask** 🦊 - Most popular Ethereum wallet
+- **MetaMask** 🦊 - Most popular Base network wallet
 - **Rabby** 🦊 - Advanced DeFi wallet with enhanced security
 - **Coinbase Wallet** 🪙 - User-friendly wallet from Coinbase
 - **WalletConnect** 🔗 - Mobile wallet connection (coming soon)
@@ -104,7 +104,7 @@ A modern, Layer3-inspired Ethereum wallet application for managing SR tokens wit
 
 ## 📱 Supported Networks
 
-- **Ethereum Mainnet** (Chain ID: 1)
+- **Base Mainnet** (Chain ID: 8453)
 - **Sepolia Testnet** (Chain ID: 11155111)
 - **Goerli Testnet** (Chain ID: 5)
 
@@ -181,7 +181,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Angular Team**: For the amazing framework
 - **Ethers.js**: For Web3 integration
 - **Vercel**: For seamless deployment
-- **Ethereum Community**: For the blockchain infrastructure
+- **Base Community**: For the blockchain infrastructure
 
 ## 📞 Support
 
@@ -213,4 +213,4 @@ The token contract address is currently set to a placeholder. To use with your s
 
 ---
 
-**Built with ❤️ for the Ethereum community**
+**Built with ❤️ for the Base community**

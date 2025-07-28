@@ -296,6 +296,13 @@
           }
         }
 
+        .network-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
         .network-badge {
           color: white;
           padding: 6px 12px;
@@ -303,6 +310,32 @@
           font-size: 0.75rem;
           font-weight: 700;
           letter-spacing: 0.05em;
+        }
+
+        .switch-network-button {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: linear-gradient(135deg, #0052FF 0%, #0052FF 100%);
+          border: none;
+          border-radius: 8px;
+          padding: 6px 12px;
+          color: white;
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0, 82, 255, 0.3);
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 82, 255, 0.4);
+          }
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
         }
       }
     }

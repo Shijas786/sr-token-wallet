@@ -152,6 +152,30 @@
       margin: 0;
       line-height: 1.5;
     }
+
+    .network-notice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 82, 255, 0.1);
+      border: 1px solid rgba(0, 82, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+        color: #0052FF;
+        flex-shrink: 0;
+      }
+
+      span {
+        color: #94a3b8;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
   }
 
   .card-content {

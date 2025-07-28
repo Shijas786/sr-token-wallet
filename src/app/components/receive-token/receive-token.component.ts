@@ -133,12 +133,14 @@ export class ReceiveTokenComponent implements OnInit, AfterViewInit {
     if (!this.walletState.networkId) return 'Unknown';
     
     switch (this.walletState.networkId) {
-      case 1:
-        return 'Ethereum Mainnet';
       case 11155111:
         return 'Sepolia Testnet';
       case 5:
         return 'Goerli Testnet';
+      case 8453:
+        return 'Base Mainnet';
+      case 84532:
+        return 'Base Sepolia Testnet';
       default:
         return `Network ${this.walletState.networkId}`;
     }
@@ -148,12 +150,14 @@ export class ReceiveTokenComponent implements OnInit, AfterViewInit {
     if (!this.walletState.networkId) return '#64748b';
     
     switch (this.walletState.networkId) {
-      case 1:
-        return '#10b981'; // Green for mainnet
       case 11155111:
         return '#6366f1'; // Indigo for Sepolia
       case 5:
         return '#8b5cf6'; // Purple for Goerli
+      case 8453:
+        return '#0052FF'; // Blue for Base mainnet
+      case 84532:
+        return '#0052FF'; // Blue for Base testnet
       default:
         return '#64748b'; // Gray for unknown
     }
@@ -163,12 +167,14 @@ export class ReceiveTokenComponent implements OnInit, AfterViewInit {
     if (!address) return '#';
     
     const networkId = this.walletState.networkId;
-    let baseUrl = 'https://etherscan.io';
+    let baseUrl = 'https://basescan.org';
     
     if (networkId === 11155111) {
       baseUrl = 'https://sepolia.etherscan.io';
     } else if (networkId === 5) {
       baseUrl = 'https://goerli.etherscan.io';
+    } else if (networkId === 84532) {
+      baseUrl = 'https://sepolia.basescan.org';
     }
     
     return `${baseUrl}/address/${address}`;

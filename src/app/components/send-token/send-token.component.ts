@@ -50,7 +50,7 @@ export class SendTokenComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.sendForm = this.fb.group({
-      recipientAddress: ['', [Validators.required, this.validateEthereumAddress.bind(this)]],
+      recipientAddress: ['', [Validators.required, this.validateBaseAddress.bind(this)]],
       amount: ['', [Validators.required, Validators.min(0.000001), this.validateBalance.bind(this)]]
     });
   }
@@ -62,13 +62,13 @@ export class SendTokenComponent implements OnInit {
     });
   }
 
-  validateEthereumAddress(control: any): {[key: string]: any} | null {
+  validateBaseAddress(control: any): {[key: string]: any} | null {
     const address = control.value;
     if (!address) return null;
     
-    // Basic Ethereum address validation
-    const ethereumAddressRegex = /^0x[a-fA-F0-9]{40}$/;
-    if (!ethereumAddressRegex.test(address)) {
+    // Basic Base network address validation
+    const baseAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+    if (!baseAddressRegex.test(address)) {
       return { 'invalidAddress': true };
     }
     return null;
